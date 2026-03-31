@@ -2,37 +2,68 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>좋아요 기능</title>
+    <title>좋아요 제한 기능</title>
     <style>
-        .like-container { font-family: sans-serif; text-align: center; margin-top: 50px; }
+        .like-container { font-family: 'Pretendard', sans-serif; text-align: center; margin-top: 50px; }
+        
         .like-button { 
-            font-size: 2rem; border: none; background: none; cursor: pointer; transition: transform 0.2s; 
+            font-size: 3rem; border: none; background: none; cursor: pointer; 
+            transition: all 0.3s ease; filter: grayscale(100%); /* 기본은 회색 */
         }
-        .like-button:active { transform: scale(1.2); }
-        .count { font-size: 1.5rem; font-weight: bold; color: #ff4757; }
+
+        /* 이미 눌렀을 때 또는 마우스를 올렸을 때 빨간색으로 */
+        .like-button.active { filter: grayscale(0%); transform: scale(1.1); }
+        .like-button:disabled { cursor: default; opacity: 0.7; }
+
+        .count { font-size: 1.2rem; color: #333; margin-top: 10px; }
+        .msg { font-size: 0.9rem; color: #ff4757; height: 20px; margin-top: 5px; }
     </style>
 </head>
 <body>
 
 <div class="like-container">
-    <button class="like-button" id="likeBtn">❤️</button>
-    <p>좋아요 <span id="likeCount" class="count">0</span>개</p>
+    <button id="likeBtn" class="like-button">🤍</button>
+    <div id="likeCount" class="count">좋아요 0개</div>
+    <div id="message" class="msg"></div>
 </div>
 
 <script>
     const likeBtn = document.getElementById('likeBtn');
     const likeCountDisplay = document.getElementById('likeCount');
+    const messageDisplay = document.getElementById('message');
 
-    // 1. 페이지 로드 시 저장된 좋아요 수 불러오기
-    let count = localStorage.getItem('myProjectLikes') || 0;
-    likeCountDisplay.innerText = count;
+    // 1. 초기 로드 시 상태 확인
+    let count = parseInt(localStorage.getItem('totalLikes')) || 0;
+    const hasLiked = localStorage.getItem('hasLiked') === 'true';
+
+    likeCountDisplay.innerText = `좋아요 ${count}개`;
+
+    if (hasLiked) {
+        setLikedState();
+    }
 
     // 2. 클릭 이벤트
     likeBtn.addEventListener('click', () => {
-        count++; // 숫자 증가
-        likeCountDisplay.innerText = count; // 화면 업데이트
-        localStorage.setItem('myProjectLikes', count); // 브라우저에 저장
+        if (localStorage.getItem('hasLiked') === 'true') return;
+
+        // 숫자 증가 및 저장
+        count++;
+        localStorage.setItem('totalLikes', count);
+        localStorage.setItem('hasLiked', 'true');
+
+        // UI 업데이트
+        likeCountDisplay.innerText = `좋아요 ${count}개`;
+        setLikedState();
+        messageDisplay.innerText = "좋아요가 반영되었습니다!";
     });
+
+    // 3. '이미 누름' 상태 UI 변경 함수
+    function setLikedState() {
+        likeBtn.innerText = "❤️";
+        likeBtn.classList.add('active');
+        likeBtn.disabled = true; // 다시 못 누르게 버튼 비활성화
+        messageDisplay.innerText = "이미 좋아요를 누르셨습니다.";
+    }
 </script>
 
 </body>

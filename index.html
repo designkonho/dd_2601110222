@@ -4,12 +4,19 @@
 <meta charset="UTF-8">
 <title>나에게 디자인이란?</title>
 <style>
-        .like-container { font-family: sans-serif; text-align: center; margin-top: 50px; }
+        .like-container { font-family: 'Pretendard', sans-serif; text-align: center; margin-top: 50px; }
+        
         .like-button { 
-            font-size: 2rem; border: none; background: none; cursor: pointer; transition: transform 0.2s; 
+            font-size: 3rem; border: none; background: none; cursor: pointer; 
+            transition: all 0.3s ease; filter: grayscale(100%);
         }
-        .like-button:active { transform: scale(1.2); }
-        .count { font-size: 1.5rem; font-weight: bold; color: #ff4757; }
+
+    
+        .like-button.active { filter: grayscale(0%); transform: scale(1.1); }
+        .like-button:disabled { cursor: default; opacity: 0.7; }
+
+        .count { font-size: 1.2rem; color: #333; margin-top: 10px; }
+        .msg { font-size: 0.9rem; color: #ff4757; height: 20px; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -72,21 +79,45 @@
     </p>
 
 <div class="like-container">
-    <button class="like-button" id="likeBtn">❤️</button>
-    <p>좋아요 <span id="likeCount" class="count">0</span>개</p>
+    <button id="likeBtn" class="like-button">🤍</button>
+    <div id="likeCount" class="count">좋아요 0개</div>
+    <div id="message" class="msg"></div>
 </div>
 
 <script>
     const likeBtn = document.getElementById('likeBtn');
     const likeCountDisplay = document.getElementById('likeCount');
-    let count = localStorage.getItem('myProjectLikes') || 0;
-    likeCountDisplay.innerText = count;
+    const messageDisplay = document.getElementById('message');
+
+    let count = parseInt(localStorage.getItem('totalLikes')) || 0;
+    const hasLiked = localStorage.getItem('hasLiked') === 'true';
+
+    likeCountDisplay.innerText = `좋아요 ${count}개`;
+
+    if (hasLiked) {
+        setLikedState();
+    }
+
     likeBtn.addEventListener('click', () => {
+        if (localStorage.getItem('hasLiked') === 'true') return;
+
         count++;
-        likeCountDisplay.innerText = count;
-        localStorage.setItem('myProjectLikes', count);
+        localStorage.setItem('totalLikes', count);
+        localStorage.setItem('hasLiked', 'true');
+
+        likeCountDisplay.innerText = `좋아요 ${count}개`;
+        setLikedState();
+        messageDisplay.innerText = "좋아요가 반영되었습니다!";
     });
+
+    function setLikedState() {
+        likeBtn.innerText = "❤️";
+        likeBtn.classList.add('active');
+        likeBtn.disabled = true;
+        messageDisplay.innerText = "이미 좋아요를 누르셨습니다.";
+    }
 </script>
+
 
 
 </body>

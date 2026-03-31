@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <title>나에게 디자인이란?</title>
-
+<style>
+        .like-container { font-family: sans-serif; text-align: center; margin-top: 50px; }
+        .like-button { 
+            font-size: 2rem; border: none; background: none; cursor: pointer; transition: transform 0.2s; 
+        }
+        .like-button:active { transform: scale(1.2); }
+        .count { font-size: 1.5rem; font-weight: bold; color: #ff4757; }
+    </style>
 </head>
 <body>
     <h1>나에게 디자인이란?</h1>
@@ -64,7 +71,22 @@
        그렇기때문에 디자인이 필요한 것 입니다. 사람들의 마음을 움직이고 결국 설계한 결과를 도출하는것. 그것이 디자인이라고 생각합니다.
     </p>
 
-    
+<div class="like-container">
+    <button class="like-button" id="likeBtn">❤️</button>
+    <p>좋아요 <span id="likeCount" class="count">0</span>개</p>
+</div>
+
+<script>
+    const likeBtn = document.getElementById('likeBtn');
+    const likeCountDisplay = document.getElementById('likeCount');
+    let count = localStorage.getItem('myProjectLikes') || 0;
+    likeCountDisplay.innerText = count;
+    likeBtn.addEventListener('click', () => {
+        count++;
+        likeCountDisplay.innerText = count;
+        localStorage.setItem('myProjectLikes', count);
+    });
+</script>
 
 
 </body>

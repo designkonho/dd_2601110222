@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>좋아요 기능</title>
+    <style>
+        .like-container { font-family: sans-serif; text-align: center; margin-top: 50px; }
+        .like-button { 
+            font-size: 2rem; border: none; background: none; cursor: pointer; transition: transform 0.2s; 
+        }
+        .like-button:active { transform: scale(1.2); }
+        .count { font-size: 1.5rem; font-weight: bold; color: #ff4757; }
+    </style>
+</head>
+<body>
+
+<div class="like-container">
+    <button class="like-button" id="likeBtn">❤️</button>
+    <p>좋아요 <span id="likeCount" class="count">0</span>개</p>
+</div>
+
+<script>
+    const likeBtn = document.getElementById('likeBtn');
+    const likeCountDisplay = document.getElementById('likeCount');
+
+    // 1. 페이지 로드 시 저장된 좋아요 수 불러오기
+    let count = localStorage.getItem('myProjectLikes') || 0;
+    likeCountDisplay.innerText = count;
+
+    // 2. 클릭 이벤트
+    likeBtn.addEventListener('click', () => {
+        count++; // 숫자 증가
+        likeCountDisplay.innerText = count; // 화면 업데이트
+        localStorage.setItem('myProjectLikes', count); // 브라우저에 저장
+    });
+</script>
+
+</body>
+</html>
